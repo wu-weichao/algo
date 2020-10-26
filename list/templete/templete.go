@@ -99,6 +99,11 @@ func ListIsPalindrome(list *single.LinkedList) bool {
 	}
 	// 反转链表
 	back = ListReverse(back)
+	defer func() {
+		// 恢复链表
+		back = ListReverse(back)
+		midNode.SetNext(backStartNode)
+	}()
 	forntCur := fornt.GetHead().GetNext()
 	backCur := back.GetHead().GetNext()
 	for forntCur != nil {
@@ -112,5 +117,64 @@ func ListIsPalindrome(list *single.LinkedList) bool {
 }
 
 // 两个有序的链表合并
+func SortListMerge(listOne, listTwo *single.LinkedList) *single.LinkedList {
+	if listOne == nil || listOne.GetHead() == nil {
+		return listTwo
+	}
+	if listTwo == nil || listTwo.GetHead() == nil {
+		return listOne
+	}
+	list := single.NewLinkedList()
+	cur := list.GetHead()
+	curOne := listOne.GetHead().GetNext()
+	curTwo := listTwo.GetHead().GetNext()
+	// 升序
+	for curOne != nil && curTwo != nil {
+		// 需要转换为同类型
+		if curOne.GetValue().(int) > curTwo.GetValue().(int) {
+			cur.SetNext(curTwo)
+			curTwo = curTwo.GetNext()
+		} else {
+			cur.SetNext(curOne)
+			curOne = curOne.GetNext()
+		}
+		cur = cur.GetNext()
+	}
+	// 剩下为未合并的数据
+	if curOne != nil {
+		cur.SetNext(curOne)
+	} else if curTwo != nil {
+		cur.SetNext(curOne)
+	}
+	return list
+}
 
 // 删除链表倒数第 n 个结点
+// 设置2个指针，使其中1个指针移动n个结点
+// 再同时遍历2个指针，当第1个指针为nil时，则第2个指针为倒数第n的结点
+func ListDeleteBottomN(list *single.LinkedList, n int) *single.LinkedList {
+	if list == nil || list.GetHead() == nil {
+		return list
+	}
+	// 设置1个指针，移动n个结点
+	cur := list.GetHead()
+	for i := 0; i < n && cur != nil; i++ {
+		cur = cur.GetNext()
+	}
+	if cur == nil {
+		return list
+	}
+	// 循环获取待删除的结点，从哨兵结点开始遍历，可以得到待删除结点前的一个结点
+	tmp := list.GetHead()
+	for cur.GetNext() != nil {
+		cur = cur.GetNext()
+		tmp = tmp.GetNext()
+	}
+	// 删除结点
+	if tmp.GetNext() != nil {
+		tmp.SetNext(tmp.GetNext().GetNext())
+	} else {
+		tmp.SetNext(nil)
+	}
+	return list
+}
