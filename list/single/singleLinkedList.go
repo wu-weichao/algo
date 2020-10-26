@@ -94,7 +94,7 @@ func (this *LinkedList) InsertToTail(v interface{}) bool {
 
 // 删除结点
 func (this *LinkedList) DeleteNode(node *LinkedListNode) bool {
-	if node == nil {
+	if node == nil || node == this.head {
 		return false
 	}
 	// 找到前驱结点
