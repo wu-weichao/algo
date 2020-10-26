@@ -23,6 +23,10 @@ func (this *LinkedListNode) GetNext() *LinkedListNode {
 	return this.next
 }
 
+func (this *LinkedListNode) SetNext(next *LinkedListNode) {
+	this.next = next
+}
+
 // 单链表
 type LinkedList struct {
 	head *LinkedListNode // 哨兵结点
@@ -32,6 +36,10 @@ type LinkedList struct {
 func NewLinkedList() *LinkedList {
 	// 创建单链表时，创建一个哨兵结点，统一头尾结点的操作
 	return &LinkedList{NewLinkedListNode(0), 0}
+}
+
+func (this *LinkedList) GetHead() *LinkedListNode {
+	return this.head
 }
 
 // 在指定结点后追加结点
